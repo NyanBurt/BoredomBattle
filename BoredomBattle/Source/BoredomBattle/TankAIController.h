@@ -3,9 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Tank.h"
 #include "AIController.h"
 #include "TankAIController.generated.h"
+
+class ATank;
 
 /**
  * 
@@ -15,8 +16,10 @@ class BOREDOMBATTLE_API ATankAIController : public AAIController
 {
 	GENERATED_BODY()
 	
-	void BeginPlay() override;
+	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
+private:
 	ATank* GetControlledTank() const;
-	
+	ATank* GetPlayerTank() const;
 	
 };
