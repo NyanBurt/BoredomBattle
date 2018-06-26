@@ -9,6 +9,8 @@
 class UTankBarrel;
 class UTankTurret;
 class UTankAimingComponent;
+class AProjectile;
+
 
 UCLASS()
 class BOREDOMBATTLE_API ATank : public APawn
@@ -16,6 +18,7 @@ class BOREDOMBATTLE_API ATank : public APawn
 	GENERATED_BODY()
 
 protected:
+	UPROPERTY(BlueprintReadOnly)
 	UTankAimingComponent * TankAimingComponent = nullptr;
 
 public:
@@ -27,22 +30,24 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 	void AimAt(FVector HitLocation);
-
-	UFUNCTION(BlueprintCallable, Category = Setup)
-	void SetBarrelReference(UTankBarrel* BarrelToSet);
-
-	UFUNCTION(BlueprintCallable, Category = Setup)
-	void SetTurretReference(UTankTurret* TurretToSet);
 
 	UFUNCTION(BlueprintCallable)
 	void Fire();
 
-	UPROPERTY(EditAnywhere, Category = Firing)
-	float LaunchSpeed = 100000;
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	float LaunchSpeed = 8000;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	//UClass* ProjectileBlueprint;
+	TSubclassOf<AProjectile> ProjectileBlueprint;
 	
+	// Local barrel reference for spawning projectile
+	UTankBarrel* Barrel = nullptr;	// TODO: remove
+
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	float ReloadTime = 3.0f;
+
+	float LastFireTime = 0;
+
 };

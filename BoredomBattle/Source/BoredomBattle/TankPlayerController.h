@@ -7,6 +7,7 @@
 #include "TankPlayerController.generated.h"
 
 class ATank;
+class UTankAimingComponent;
 
 /**
  * 
@@ -16,20 +17,30 @@ class BOREDOMBATTLE_API ATankPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	float CrosshairXLocation = 0.5f;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	float LineTraceRange = 1000000;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	float CrosshairYLocation = 0.33333f;
 
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
+
+
 private:
-	ATank* GetControlledTank() const;
+	
 	void AimTowardsCrosshair();
 	bool GetSightRayHitLocation(FVector& OUTHitLocation) const;
+
+protected:
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+	ATank * GetControlledTank() const;
+
+	// DO NOT DEFINE BlueprintImplementableEvent
+	UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
+	void FoundAimingComponent(UTankAimingComponent* AimingCompRef);
 	
 };

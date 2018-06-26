@@ -18,8 +18,8 @@ class BOREDOMBATTLE_API ATankAIController : public AAIController
 	
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
+
 private:
-	ATank* GetControlledTank() const;
-	ATank* GetPlayerTank() const;
+	float AcceptanceRadius = 3000;
 	
 };

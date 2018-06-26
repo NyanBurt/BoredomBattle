@@ -3,19 +3,22 @@
 #include "TankPlayerController.h"
 #include "Engine/World.h"
 #include "Tank.h"
+#include "TankAimingComponent.h"
 
 #define OUT
 
 void ATankPlayerController::BeginPlay() {
 
 	Super::BeginPlay();
-	ATank* tmpTankPtr = GetControlledTank();
-	if (tmpTankPtr) {
-		UE_LOG(LogTemp, Warning, TEXT("Controlled Pawn: %s"), *(tmpTankPtr->GetName()))
+	
+	UTankAimingComponent* AimingComponent = GetControlledTank()->FindComponentByClass<UTankAimingComponent>();
+	if (ensure(AimingComponent)) {
+		FoundAimingComponent(AimingComponent);
 	}
 	else {
-		UE_LOG(LogTemp, Error, TEXT("Controlled Pawn is null"))
+		UE_LOG(LogTemp, Error, TEXT("Can't find AimingComponent"))
 	}
+	
 
 }
 
@@ -33,9 +36,16 @@ ATank* ATankPlayerController::GetControlledTank() const {
 
 }
 
+/*
+void ATankPlayerController::FoundAimingComponent(UTankAimingComponent* AimingCompRef)
+{
+	// ...
+}
+*/
+
 void ATankPlayerController::AimTowardsCrosshair() {
 	
-	if (!GetControlledTank()) {
+	if (!ensure(GetControlledTank())) {
 		return;
 	}
 

@@ -18,14 +18,10 @@ UTankAimingComponent::UTankAimingComponent()
 }
 
 
-void UTankAimingComponent::SetBarrelReference(UTankBarrel * BarrelToSet)
-{
-	Barrel = BarrelToSet;
-}
-
-void UTankAimingComponent::SetTurretReference(UTankTurret * TurretToSet)
+void UTankAimingComponent::Initialise(UTankTurret * TurretToSet, UTankBarrel * BarrelToSet)
 {
 	Turret = TurretToSet;
+	Barrel = BarrelToSet;
 }
 
 // Called when the game starts
@@ -50,7 +46,7 @@ void UTankAimingComponent::AimAt(FVector AimLocation, float LaunchSpeed)
 {
 
 	//UE_LOG(LogTemp, Warning, TEXT("%s aiming at %s from %s"), *(GetOwner()->GetName()),	*(AimLocation.ToString()), *(Barrel->GetComponentLocation().ToString()))
-	if (!Barrel) {
+	if (!ensure(Barrel)) {
 		UE_LOG(LogTemp, Error, TEXT("Barrel hasn't been assigned"))
 		return;
 	}
@@ -81,6 +77,7 @@ void UTankAimingComponent::AimAt(FVector AimLocation, float LaunchSpeed)
 
 void UTankAimingComponent::MoveBarrel(FVector AimDirection)
 {
+	if (!ensure(Barrel || !Turret)) { return; }
 	// Work out differences between current barrel rotation and AimDirection
 	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
 	auto AimAtRotator = AimDirection.Rotation();

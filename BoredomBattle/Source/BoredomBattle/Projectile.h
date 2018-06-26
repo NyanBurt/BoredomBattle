@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Projectile.generated.h"
 
+class UProjectileMovementComponent;
+
 UCLASS()
 class BOREDOMBATTLE_API AProjectile : public AActor
 {
@@ -23,6 +25,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	
-	
+	void LaunchProjectile(float LaunchSpeed);
+
+private:
+	UProjectileMovementComponent* ProjectileMovement = nullptr;
+
 };
