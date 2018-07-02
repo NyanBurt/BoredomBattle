@@ -2,7 +2,6 @@
 
 #include "TankPlayerController.h"
 #include "Engine/World.h"
-#include "Tank.h"
 #include "TankAimingComponent.h"
 
 #define OUT
@@ -11,10 +10,9 @@ void ATankPlayerController::BeginPlay() {
 
 	Super::BeginPlay();
 	
-	UTankAimingComponent* AimingComponent = GetControlledTank()->FindComponentByClass<UTankAimingComponent>();
-	if (ensure(AimingComponent)) {
-		FoundAimingComponent(AimingComponent);
-	}
+	UTankAimingComponent* AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
+	if (!ensure(AimingComponent)) {	return;	}
+	FoundAimingComponent(AimingComponent);
 
 }
 
@@ -26,12 +24,6 @@ void ATankPlayerController::Tick(float DeltaTime) {
 	
 }
 
-ATank* ATankPlayerController::GetControlledTank() const {
-
-	return Cast<ATank>(GetPawn());
-
-}
-
 /*
 void ATankPlayerController::FoundAimingComponent(UTankAimingComponent* AimingCompRef)
 {
@@ -41,16 +33,15 @@ void ATankPlayerController::FoundAimingComponent(UTankAimingComponent* AimingCom
 
 void ATankPlayerController::AimTowardsCrosshair() {
 	
-	if (!ensure(GetControlledTank())) {
-		return;
-	}
+	UTankAimingComponent* AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
+	if (!ensure(AimingComponent)) { return; }
 
 	FVector HitLocation; // OUT parameter
 
 	if (GetSightRayHitLocation(HitLocation)) {
 		
 		// TODO Tell controlled tank to aim at location
-
+		AimingComponent->AimAt(HitLocation);
 
 	}
 
@@ -88,7 +79,8 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& OUTHitLocation) cons
 
 		)) {
 			OUTHitLocation = OUTHitResult.Location;
-			GetControlledTank()->AimAt(OUTHitLocation);
+			UTankAimingComponent* AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
+			AimingComponent->AimAt(OUTHitLocation);
 			//auto Time = GetWorld()->GetTimeSeconds();
 			//UE_LOG(LogTemp, Warning, TEXT("GetSightRayHitLocation success %f"), Time)
 			return true;
