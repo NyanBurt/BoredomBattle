@@ -15,10 +15,6 @@ void ATankPlayerController::BeginPlay() {
 	if (ensure(AimingComponent)) {
 		FoundAimingComponent(AimingComponent);
 	}
-	else {
-		UE_LOG(LogTemp, Error, TEXT("Can't find AimingComponent"))
-	}
-	
 
 }
 
