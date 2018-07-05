@@ -37,11 +37,11 @@ protected:
 
 
 	UPROPERTY(BlueprintReadOnly, Category = "State")
-		EAimingStatus AimingStatus = EAimingStatus::Aiming;
+	EAimingStatus AimingStatus = EAimingStatus::Reloading;
 
 public:	
 	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	void AimAt(FVector HitLocation);
 
@@ -59,10 +59,12 @@ private:
 	TSubclassOf<AProjectile> ProjectileBlueprint;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-		float ReloadTime = 3.0f;
+	float ReloadTime = 3.0f;
 
 	float LastFireTime = 0;
+	FVector AimDirection;
 
 	void MoveBarrel(FVector AimDirection);
+	bool IsBarrelMoving();
 
 };
