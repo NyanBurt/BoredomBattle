@@ -34,7 +34,7 @@ void UTankMovementComponent::RequestDirectMove(const FVector & MoveVelocity, boo
 	IntendMoveForward(ForwardThrow);
 
 	auto Name = GetName();
-	UE_LOG(LogTemp, Warning, TEXT("Right: %f Forward: %f"), RightThrow, ForwardThrow)
+	//UE_LOG(LogTemp, Warning, TEXT("Right: %f Forward: %f"), RightThrow, ForwardThrow)
 
 	//UE_LOG(LogTemp, Warning, TEXT("%s move velocity is %s"), *(TankName), *(MoveVelocityString))
 

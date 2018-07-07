@@ -23,8 +23,20 @@ void ATankAIController::Tick(float DeltaTime)
 	auto AimingComponent = ControlledTank->FindComponentByClass<UTankAimingComponent>();
 	AimingComponent->AimAt(PlayerTank->GetActorLocation());
 
-	// TODO: fix firing
-	AimingComponent->Fire();	// TODO limit this
+	/*
+	if (AimingComponent->GetFiringState() == EAimingStatus::Reloading)
+		UE_LOG(LogTemp, Warning, TEXT("TankAI aiming status: reloading"))
+
+	if (AimingComponent->GetFiringState() == EAimingStatus::Aiming)
+		UE_LOG(LogTemp, Warning, TEXT("TankAI aiming status: aiming"))
+
+	if (AimingComponent->GetFiringState() == EAimingStatus::Locked)
+		UE_LOG(LogTemp, Warning, TEXT("TankAI aiming status: locked"))
+	*/
+
+	if (AimingComponent->GetFiringState() == EAimingStatus::Locked)
+		AimingComponent->Fire();	// TODO limit this
 	
 }
+
 

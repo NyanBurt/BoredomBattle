@@ -11,7 +11,8 @@ UENUM()
 enum class EAimingStatus : uint8 {
 	Locked,
 	Aiming,
-	Reloading
+	Reloading,
+	OutOfAmmo
 };
 
 // FORWARD DECLARATION EXAMPLE!!!
@@ -48,6 +49,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Fire();
 
+	EAimingStatus GetFiringState() const;
+
+	UFUNCTION(BlueprintCallable)
+	int GetCurrentAmmo() const;
+
 private:
 	UTankBarrel * Barrel = nullptr;
 	UTankTurret * Turret = nullptr;
@@ -60,6 +66,12 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	float ReloadTime = 3.0f;
+
+
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	int MaxAmmo = 3;
+
+	int CurrentAmmo;
 
 	float LastFireTime = 0;
 	FVector AimDirection;

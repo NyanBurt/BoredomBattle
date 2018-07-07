@@ -32,6 +32,7 @@ void UTankAimingComponent::BeginPlay()
 
 	// So that first fire is after initial reload
 	LastFireTime = GetWorld()->GetTimeSeconds();
+	CurrentAmmo = MaxAmmo;
 }
 
 
@@ -39,9 +40,10 @@ void UTankAimingComponent::BeginPlay()
 void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
-	if ((GetWorld()->GetTimeSeconds() - LastFireTime) < ReloadTime) {
+	if (CurrentAmmo <= 0) {
+		AimingStatus = EAimingStatus::OutOfAmmo;
+	}
+	else if ((GetWorld()->GetTimeSeconds() - LastFireTime) < ReloadTime) {
 		AimingStatus = EAimingStatus::Reloading;
 	}
 	else if (IsBarrelMoving()) {
@@ -53,6 +55,16 @@ void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickTy
 		AimingStatus = EAimingStatus::Locked;
 	}
 
+}
+
+EAimingStatus UTankAimingComponent::GetFiringState() const
+{
+	return AimingStatus;
+}
+
+int UTankAimingComponent::GetCurrentAmmo() const
+{
+	return CurrentAmmo;
 }
 
 void UTankAimingComponent::AimAt(FVector AimLocation)
@@ -110,14 +122,14 @@ bool UTankAimingComponent::IsBarrelMoving()
 
 	if (!ensure(Barrel)) { return false; }
 	FVector BarrelFwd = Barrel->GetForwardVector();
-	return !BarrelFwd.Equals(AimDirection, 0.01f);
+	return !BarrelFwd.Equals(AimDirection, 0.1f);
 
 }
 
 void UTankAimingComponent::Fire()
 {
 
-	if (AimingStatus != EAimingStatus::Reloading) {
+	if (AimingStatus == EAimingStatus::Locked || AimingStatus == EAimingStatus::Aiming) {
 		if (!ensure(Barrel)) { return; }
 		if (!ensure(ProjectileBlueprint)) { return; }
 		// Spawn a projectile
@@ -130,7 +142,9 @@ void UTankAimingComponent::Fire()
 		Projectile->LaunchProjectile(LaunchSpeed);
 		LastFireTime = GetWorld()->GetTimeSeconds();
 
+		CurrentAmmo--;
 	}
 
 }
+
 
