@@ -16,5 +16,15 @@ public:
 	// Sets default values for this pawn's properties
 	ATank();
 
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const & DamageEvent, class AController * EventInstigator, AActor * DamageCauser) override;
 
+private:
+	UPROPERTY(EditDefaultsOnly, Category = "Integrity")
+	int32 MaxIntegrity = 100.0f;
+
+	UPROPERTY(VisibleAnywhere, Category = "Integrity")
+	int32 CurrentIntegrity;
+
+	UFUNCTION(BlueprintPure, Category = "Integrity")
+	float GetIntegrityPercentage() const;
 };

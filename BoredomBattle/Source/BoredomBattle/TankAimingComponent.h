@@ -52,7 +52,7 @@ public:
 	EAimingStatus GetFiringState() const;
 
 	UFUNCTION(BlueprintCallable)
-	int GetCurrentAmmo() const;
+	int32 GetCurrentAmmo() const;
 
 private:
 	UTankBarrel * Barrel = nullptr;
@@ -69,9 +69,9 @@ private:
 
 
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-	int MaxAmmo = 3;
+	int32 MaxAmmo = 3;
 
-	int CurrentAmmo;
+	int32 CurrentAmmo;
 
 	float LastFireTime = 0;
 	FVector AimDirection;
