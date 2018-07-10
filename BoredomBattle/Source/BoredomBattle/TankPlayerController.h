@@ -34,6 +34,11 @@ private:
 	void AimTowardsCrosshair();
 	bool GetSightRayHitLocation(FVector& OUTHitLocation) const;
 
+	virtual void SetPawn(APawn* InPawn)override;
+
+	UFUNCTION()
+	void OnPossessedTankDeath();
+
 protected:
 	// DO NOT DEFINE BlueprintImplementableEvent
 	UFUNCTION(BlueprintImplementableEvent, Category = "Setup")

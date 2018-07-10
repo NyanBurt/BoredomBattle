@@ -3,6 +3,7 @@
 #include "TankPlayerController.h"
 #include "Engine/World.h"
 #include "TankAimingComponent.h"
+#include "Tank.h"
 
 #define OUT
 
@@ -78,9 +79,9 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& OUTHitLocation) cons
 			OUTHitResult,
 			CrosshairWorldLocation,
 			CrosshairWorldLocation + CrosshairWorldDirection * LineTraceRange,
-			ECollisionChannel::ECC_Visibility
-
-		)) {
+			ECollisionChannel::ECC_Camera
+		)
+			) {
 			OUTHitLocation = OUTHitResult.Location;
 			UTankAimingComponent* AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
 			AimingComponent->AimAt(OUTHitLocation);
@@ -97,4 +98,23 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& OUTHitLocation) cons
 	//UE_LOG(LogTemp, Warning, TEXT("GetSightRayHitLocation failed %f"), Time)
 	return false;	// WARNING: TEMPORARY
 
+}
+
+void ATankPlayerController::SetPawn(APawn * InPawn)
+{
+	Super::SetPawn(InPawn);
+	if (InPawn) {
+		auto PossessedTank = Cast<ATank>(InPawn);
+		if (!ensure(PossessedTank)) { return; }
+
+		// Subscribe our local method
+		PossessedTank->OnDeath.AddUniqueDynamic(this, &ATankPlayerController::OnPossessedTankDeath);
+	}
+}
+
+void ATankPlayerController::OnPossessedTankDeath()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Player tank receiving!"))
+	if (!GetPawn()) { return; }
+	StartSpectatingOnly();
 }
